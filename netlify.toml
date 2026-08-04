@@ -2,8 +2,11 @@
   publish = "."
   functions = "netlify/functions"
 
-[build.processing.html]
-  pretty_urls = false
+[[redirects]]
+  from = "/testredirect"
+  to = "/cocotafadmin.html"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/masina/:id"
