@@ -10,6 +10,6 @@
 
 [[redirects]]
   from = "/masina/*"
-  to = "/cocotafadmin.html?debug=:splat"
+  to = "/.netlify/functions/masina/:splat"
   status = 200
   force = true
