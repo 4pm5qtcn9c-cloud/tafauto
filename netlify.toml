@@ -6,3 +6,4 @@
   from = "/masina/:id"
   to = "/.netlify/functions/masina?id=:id"
   status = 200
+  force = true
