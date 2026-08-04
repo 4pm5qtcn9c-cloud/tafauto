@@ -16,7 +16,12 @@ function escapeHtml(str) {
 }
 
 exports.handler = async function (event) {
-  const id = event.queryStringParameters && event.queryStringParameters.id;
+  let id = event.queryStringParameters && event.queryStringParameters.id;
+  if (!id && event.path) {
+    const parts = event.path.split("/").filter(Boolean);
+    id = parts[parts.length - 1];
+    if (id === "masina") id = null;
+  }
   const target = SITE_URL + (id ? "/?masina=" + encodeURIComponent(id) : "/");
 
   if (!id) {
