@@ -9,7 +9,7 @@
   force = true
 
 [[redirects]]
-  from = "/masina/:id"
-  to = "/.netlify/functions/masina?id=:id"
+  from = "/masina/*"
+  to = "/.netlify/functions/masina?id=:splat"
   status = 200
   force = true
