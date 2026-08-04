@@ -2,6 +2,9 @@
   publish = "."
   functions = "netlify/functions"
 
+[build.processing.html]
+  pretty_urls = false
+
 [[redirects]]
   from = "/masina/:id"
   to = "/.netlify/functions/masina?id=:id"
