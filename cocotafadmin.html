@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TAF AUTO Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#111;color:#eee;min-height:100vh}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+.box{background:#1c1c1c;border-radius:12px;padding:2rem;width:100%;max-width:340px}
+.box h2{color:#c9a84c;font-size:1.1rem;letter-spacing:3px;margin-bottom:0.3rem;font-weight:400}
+.box p{color:#666;font-size:0.7rem;letter-spacing:1px;margin-bottom:2rem}
+label{display:block;color:#888;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+input[type=password],input[type=text],input[type=number],input[type=url],textarea,select{width:100%;padding:12px;background:#0a0a0a;border:1px solid #333;border-radius:6px;color:#eee;font-size:0.9rem;margin-bottom:1rem;-webkit-appearance:none;outline:none}
+.btn{display:block;width:100%;padding:14px;background:#c9a84c;color:#111;border:none;border-radius:6px;font-size:0.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn:active{background:#e0bb6a}
+#err{color:#f66;font-size:0.8rem;margin-top:0.75rem;display:none;text-align:center}
+#admin{display:none;padding:1.5rem;max-width:700px;margin:0 auto}
+.adm-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #333}
+.adm-h span{color:#c9a84c;letter-spacing:3px;font-size:1rem}
+.btn-sm{background:transparent;border:1px solid #444;color:#888;padding:8px 16px;border-radius:4px;font-size:0.7rem;cursor:pointer;letter-spacing:1px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:auto}
+.btn-sm:active{background:#222}
+.stit{color:#c9a84c;letter-spacing:2px;font-size:0.8rem;margin:2rem 0 1rem;text-transform:uppercase}
+.fbox{background:#1c1c1c;border-radius:8px;padding:1.5rem;margin-bottom:2rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+@media(max-width:500px){.g2{grid-template-columns:1fr}}
+.ok{color:#5BAD78;font-size:0.8rem;margin-top:0.75rem;display:none}
+.er{color:#f66;font-size:0.8rem;margin-top:0.75rem;display:none}
+.si{background:#1c1c1c;border-radius:8px;padding:1rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.si img{width:72px;height:48px;object-fit:cover;border-radius:4px;flex-shrink:0}
+.si-name{color:#eee;font-size:0.9rem}
+.si-det{color:#666;font-size:0.7rem}
+.si-price{color:#c9a84c;font-size:0.9rem;margin-left:auto;margin-right:0.75rem;white-space:nowrap}
+.btn-del{background:#3A1414;border:1px solid #5A2020;color:#f66;padding:8px 12px;border-radius:4px;font-size:0.7rem;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:auto}
+.btn-del:active{background:#5A2020}
+.loading{color:#666;font-size:0.8rem;padding:2rem;text-align:center}
+.img-slot{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem}
+.img-slot input{flex:1;margin-bottom:0}
+.img-slot .btn-upload{background:#1a3a1a;border:1px solid #2a6a2a;color:#5BAD78;padding:10px 14px;border-radius:6px;font-size:0.7rem;font-weight:700;letter-spacing:1px;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:auto;flex-shrink:0}
+.img-slot .btn-upload:active{background:#2a5a2a}
+.img-slot .btn-upload.loading-img{background:#222;border-color:#444;color:#888;pointer-events:none}
+.img-slot .img-prev{width:48px;height:36px;object-fit:cover;border-radius:4px;display:none;flex-shrink:0}
+.img-upload-hidden{display:none}
+.imgs-note{font-size:0.65rem;color:#666;letter-spacing:0.5px;margin-bottom:1rem;font-style:italic}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="box">
+    <h2>TAF AUTO</h2>
+    <p>PANOU ADMINISTRARE</p>
+    <label>Parolă</label>
+    <input type="password" id="pwd" autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Introdu parola"/>
+    <div id="err">Parolă incorectă</div>
+    <button class="btn" id="login-btn">INTRĂ ÎN CONT</button>
+  </div>
+</div>
+
+<div id="admin">
+  <div class="adm-h">
+    <span>TAF AUTO — ADMIN</span>
+    <button class="btn-sm" id="logout-btn">IEȘI</button>
+  </div>
+
+  <div class="stit">Adaugă mașină nouă</div>
+  <div class="fbox">
+    <div class="g2">
+      <div><label>Marcă</label><input type="text" id="f-make" placeholder="BMW"/></div>
+      <div><label>Model</label><input type="text" id="f-model" placeholder="530D E60"/></div>
+      <div><label>An</label><input type="number" id="f-year" placeholder="2007"/></div>
+      <div><label>Kilometri</label><input type="text" id="f-km" placeholder="183.000 km"/></div>
+      <div><label>Motor</label><input type="text" id="f-engine" placeholder="3.0 Diesel"/></div>
+      <div><label>Putere</label><input type="text" id="f-power" placeholder="218 CP"/></div>
+      <div><label>Cutie viteze</label><input type="text" id="f-gearbox" placeholder="Automată"/></div>
+      <div><label>Culoare</label><input type="text" id="f-color" placeholder="Negru"/></div>
+      <div><label>Garanție</label><input type="text" id="f-warranty" placeholder="12 luni"/></div>
+      <div><label>Preț</label><input type="text" id="f-price" placeholder="6.500 EUR"/></div>
+      <div><label>Status</label>
+        <select id="f-status">
+          <option value="Disponibil">Disponibil</option>
+          <option value="Rezervat">Rezervat</option>
+          <option value="Vândut">Vândut</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding-top:1.4rem">
+        <input type="checkbox" id="f-tva" style="width:auto;margin:0;accent-color:#c9a84c;cursor:pointer"/>
+        <label style="margin:0;cursor:pointer" onclick="g('f-tva').click()">TVA deductibil</label>
+      </div>
+    </div>
+<div class="imgs-note">Apasă "ÎNCARCĂ" pentru a selecta poza de pe telefon — se urcă automat pe ImgBB</div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 1 (principală)</label>
+      <div class="img-slot">
+        <input type="url" id="f-img1" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(1)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev1" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file1" onchange="uploadToImgBB(1, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 2</label>
+      <div class="img-slot">
+        <input type="url" id="f-img2" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(2)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev2" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file2" onchange="uploadToImgBB(2, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 3</label>
+      <div class="img-slot">
+        <input type="url" id="f-img3" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(3)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev3" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file3" onchange="uploadToImgBB(3, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 4</label>
+      <div class="img-slot">
+        <input type="url" id="f-img4" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(4)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev4" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file4" onchange="uploadToImgBB(4, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 5</label>
+      <div class="img-slot">
+        <input type="url" id="f-img5" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(5)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev5" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file5" onchange="uploadToImgBB(5, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 6</label>
+      <div class="img-slot">
+        <input type="url" id="f-img6" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(6)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev6" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file6" onchange="uploadToImgBB(6, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 7</label>
+      <div class="img-slot">
+        <input type="url" id="f-img7" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(7)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev7" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file7" onchange="uploadToImgBB(7, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 8</label>
+      <div class="img-slot">
+        <input type="url" id="f-img8" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(8)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev8" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file8" onchange="uploadToImgBB(8, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 9</label>
+      <div class="img-slot">
+        <input type="url" id="f-img9" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(9)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev9" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file9" onchange="uploadToImgBB(9, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 10</label>
+      <div class="img-slot">
+        <input type="url" id="f-img10" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(10)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev10" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file10" onchange="uploadToImgBB(10, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 11</label>
+      <div class="img-slot">
+        <input type="url" id="f-img11" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(11)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev11" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file11" onchange="uploadToImgBB(11, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 12</label>
+      <div class="img-slot">
+        <input type="url" id="f-img12" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(12)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev12" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file12" onchange="uploadToImgBB(12, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 13</label>
+      <div class="img-slot">
+        <input type="url" id="f-img13" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(13)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev13" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file13" onchange="uploadToImgBB(13, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 14</label>
+      <div class="img-slot">
+        <input type="url" id="f-img14" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(14)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev14" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file14" onchange="uploadToImgBB(14, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 15</label>
+      <div class="img-slot">
+        <input type="url" id="f-img15" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(15)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev15" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file15" onchange="uploadToImgBB(15, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 16</label>
+      <div class="img-slot">
+        <input type="url" id="f-img16" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(16)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev16" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file16" onchange="uploadToImgBB(16, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 17</label>
+      <div class="img-slot">
+        <input type="url" id="f-img17" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(17)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev17" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file17" onchange="uploadToImgBB(17, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 18</label>
+      <div class="img-slot">
+        <input type="url" id="f-img18" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(18)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev18" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file18" onchange="uploadToImgBB(18, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 19</label>
+      <div class="img-slot">
+        <input type="url" id="f-img19" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(19)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev19" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file19" onchange="uploadToImgBB(19, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 20</label>
+      <div class="img-slot">
+        <input type="url" id="f-img20" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(20)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev20" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file20" onchange="uploadToImgBB(20, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 21</label>
+      <div class="img-slot">
+        <input type="url" id="f-img21" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(21)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev21" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file21" onchange="uploadToImgBB(21, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 22</label>
+      <div class="img-slot">
+        <input type="url" id="f-img22" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(22)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev22" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file22" onchange="uploadToImgBB(22, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 23</label>
+      <div class="img-slot">
+        <input type="url" id="f-img23" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(23)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev23" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file23" onchange="uploadToImgBB(23, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 24</label>
+      <div class="img-slot">
+        <input type="url" id="f-img24" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(24)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev24" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file24" onchange="uploadToImgBB(24, this)"/>
+    </div>
+    <div style="margin-bottom:0.5rem">
+      <label>Poza 25</label>
+      <div class="img-slot">
+        <input type="url" id="f-img25" placeholder="Link generat automat după upload..."/>
+        <button type="button" class="btn-upload" onclick="triggerUpload(25)">ÎNCARCĂ</button>
+        <img class="img-prev" id="prev25" src="" alt=""/>
+      </div>
+      <input type="file" accept="image/*" class="img-upload-hidden" id="file25" onchange="uploadToImgBB(25, this)"/>
+    </div>
+    <label>Descriere</label><textarea id="f-desc" rows="4" placeholder="Stare, dotări, observații..."></textarea>
+    <button class="btn" id="add-btn">ADAUGĂ ÎN STOC</button>
+    <button id="cancel-edit-btn" style="display:none;background:transparent;border:1px solid #444;color:#888;margin-top:0.5rem;width:100%;padding:14px;border-radius:6px;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer">ANULEAZĂ EDITAREA</button>
+    <div class="ok" id="ok">✓ Mașină salvată cu succes!</div>
+    <div class="er" id="er">Eroare la salvare. Verifică conexiunea.</div>
+  </div>
+
+  <div class="stit">Stoc curent</div>
+  <div id="stoc"><div class="loading">Se încarcă...</div></div>
+</div>
+
+<script>
+var SB="https://gpcnnrzimzomrixzrnqy.supabase.co";
+var SK="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwY25ucnppbXpvbXJpeHpybnF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2OTE2NjUsImV4cCI6MjA5NzI2NzY2NX0.2aLmKZkiW-iF52zHFMyj5aEfKZO9rwKRQmwInbhv_4A";
+var CODES=[116,97,102,97,117,116,111,50,48,50,53];
+var PASS=CODES.map(function(c){return String.fromCharCode(c);}).join("");
+var editingId=null;
+
+function g(id){return document.getElementById(id);}
+
+g("login-btn").addEventListener("click",function(){
+  var v=g("pwd").value.trim();
+  if(v===PASS){
+    g("login").style.display="none";
+    g("admin").style.display="block";
+    g("err").style.display="none";
+    loadStoc();
+  }else{
+    g("err").style.display="block";
+    g("pwd").value="";
+  }
+});
+
+g("pwd").addEventListener("keyup",function(e){if(e.keyCode===13)g("login-btn").click();});
+g("logout-btn").addEventListener("click",function(){g("admin").style.display="none";g("login").style.display="flex";g("pwd").value="";});
+
+g("add-btn").addEventListener("click",function(){
+  var make=g("f-make").value.trim();
+  var model=g("f-model").value.trim();
+  var price=g("f-price").value.trim();
+  if(!make||!model||!price){alert("Completează Marca, Modelul și Prețul.");return;}
+  var body={
+    make:make,model:model,
+    year:g("f-year").value.trim(),
+    km:g("f-km").value.trim(),
+    engine:g("f-engine").value.trim(),
+    power:g("f-power").value.trim(),
+    gearbox:g("f-gearbox").value.trim(),
+    color:g("f-color").value.trim(),
+    warranty:g("f-warranty").value.trim(),
+    price:price,
+    status:g("f-status").value,
+    tva_deductibil:g("f-tva").checked,
+    img1:g("f-img1").value.trim()||null,
+    img2:g("f-img2").value.trim()||null,
+    img3:g("f-img3").value.trim()||null,
+    img4:g("f-img4").value.trim()||null,
+        img5:g("f-img5").value.trim()||null,
+    img6:g("f-img6").value.trim()||null,
+    img7:g("f-img7").value.trim()||null,
+    img8:g("f-img8").value.trim()||null,
+    img9:g("f-img9").value.trim()||null,
+    img10:g("f-img10").value.trim()||null,
+    img11:g("f-img11").value.trim()||null,
+    img12:g("f-img12").value.trim()||null,
+    img13:g("f-img13").value.trim()||null,
+    img14:g("f-img14").value.trim()||null,
+    img15:g("f-img15").value.trim()||null,
+    img16:g("f-img16").value.trim()||null,
+    img17:g("f-img17").value.trim()||null,
+    img18:g("f-img18").value.trim()||null,
+    img19:g("f-img19").value.trim()||null,
+    img20:g("f-img20").value.trim()||null,
+    img21:g("f-img21").value.trim()||null,
+    img22:g("f-img22").value.trim()||null,
+    img23:g("f-img23").value.trim()||null,
+    img24:g("f-img24").value.trim()||null,
+    img25:g("f-img25").value.trim()||null,
+    descr:g("f-desc").value.trim()||null
+  };
+  var isEdit = !!editingId;
+  var url = isEdit ? (SB+"/rest/v1/masini?id=eq."+editingId) : (SB+"/rest/v1/masini");
+  var method = isEdit ? "PATCH" : "POST";
+  fetch(url,{
+    method:method,
+    headers:{"apikey":SK,"Authorization":"Bearer "+SK,"Content-Type":"application/json","Prefer":"return=minimal"},
+    body:JSON.stringify(body)
+  }).then(function(r){
+    if(r.ok||r.status===201){
+      g("ok").style.display="block";g("er").style.display="none";
+      g("ok").textContent = isEdit ? "✓ Mașină actualizată cu succes!" : "✓ Mașină adăugată cu succes!";
+      setTimeout(function(){g("ok").style.display="none";},3000);
+      ["f-make","f-model","f-year","f-km","f-engine","f-power","f-gearbox","f-color","f-warranty","f-price","f-img1","f-img2","f-img3","f-img4","f-img5","f-img6","f-img7","f-img8","f-img9","f-img10","f-img11","f-img12","f-img13","f-img14","f-img15","f-img16","f-img17","f-img18","f-img19","f-img20","f-img21","f-img22","f-img23","f-img24","f-img25","f-desc"].forEach(function(id){g(id).value="";});
+      g("f-status").value="Disponibil";
+      g("f-tva").checked=false;
+      cancelEdit();
+      loadStoc();
+    }else{
+      r.text().then(function(t){console.error(t);g("er").style.display="block";g("ok").style.display="none";});
+    }
+  }).catch(function(e){console.error(e);g("er").style.display="block";});
+});
+
+function cancelEdit(){
+  editingId=null;
+  g("add-btn").textContent="ADAUGĂ ÎN STOC";
+  g("cancel-edit-btn").style.display="none";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+g("cancel-edit-btn").addEventListener("click",function(){
+  ["f-make","f-model","f-year","f-km","f-engine","f-power","f-gearbox","f-color","f-warranty","f-price","f-img1","f-img2","f-img3","f-img4","f-img5","f-img6","f-img7","f-img8","f-img9","f-img10","f-img11","f-img12","f-img13","f-img14","f-img15","f-img16","f-img17","f-img18","f-img19","f-img20","f-img21","f-img22","f-img23","f-img24","f-img25","f-desc"].forEach(function(id){g(id).value="";});
+  g("f-status").value="Disponibil";
+  g("f-tva").checked=false;
+  cancelEdit();
+});
+
+function startEdit(c){
+  editingId=c.id;
+  g("f-make").value=c.make||"";
+  g("f-model").value=c.model||"";
+  g("f-year").value=c.year||"";
+  g("f-km").value=c.km||"";
+  g("f-engine").value=c.engine||"";
+  g("f-power").value=c.power||"";
+  g("f-gearbox").value=c.gearbox||"";
+  g("f-color").value=c.color||"";
+  g("f-warranty").value=c.warranty||"";
+  g("f-price").value=c.price||"";
+  g("f-status").value=c.status||"Disponibil";
+  g("f-tva").checked=!!c.tva_deductibil;
+  for(var i=1;i<=25;i++){
+    var el=g("f-img"+i);
+    if(el) el.value=c["img"+i]||"";
+  }
+  g("f-desc").value=c.descr||"";
+  g("add-btn").textContent="SALVEAZĂ MODIFICĂRILE";
+  g("cancel-edit-btn").style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function loadStoc(){
+  var el=g("stoc"); el.innerHTML='<div class="loading">Se încarcă...</div>';
+  fetch(SB+"/rest/v1/masini?select=*&order=created_at.desc",{headers:{"apikey":SK,"Authorization":"Bearer "+SK}})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(!data||!data.length){el.innerHTML='<div class="loading">Nicio mașină.</div>';return;}
+    el.innerHTML="";
+    data.forEach(function(c){
+      var d=document.createElement("div"); d.className="si";
+      if(c.img1){var img=document.createElement("img");img.src=c.img1;img.onerror=function(){this.style.display="none";};d.appendChild(img);}
+      var info=document.createElement("div"); info.style.flex="1";
+      info.innerHTML='<div class="si-name">'+(c.make||"")+" "+(c.model||"")+" "+(c.year||"")+'</div><div class="si-det">'+(c.km||"")+(c.engine?" · "+c.engine:"")+'</div>';
+      var price=document.createElement("span"); price.className="si-price"; price.textContent=c.price||"";
+      var edit=document.createElement("button"); edit.className="btn-del"; edit.textContent="Editează";
+      edit.style.background="transparent"; edit.style.borderColor="#444"; edit.style.color="#c9a84c";
+      edit.addEventListener("click",function(){startEdit(c);});
+      var del=document.createElement("button"); del.className="btn-del"; del.textContent="Șterge";
+      del.addEventListener("click",function(){if(confirm("Ștergi această mașină?"))fetch(SB+"/rest/v1/masini?id=eq."+c.id,{method:"DELETE",headers:{"apikey":SK,"Authorization":"Bearer "+SK}}).then(loadStoc);});
+      d.appendChild(info); d.appendChild(price); d.appendChild(edit); d.appendChild(del);
+      el.appendChild(d);
+    });
+  }).catch(function(){el.innerHTML='<div class="loading">Eroare la încărcare.</div>';});
+}
+
+// ImgBB Upload
+var IMGBB_KEY = "00b40b7b6d674245d061d81c5284cc73";
+
+function triggerUpload(n){
+  document.getElementById("file"+n).click();
+}
+
+function uploadToImgBB(n, input){
+  var file = input.files[0];
+  if(!file) return;
+  var btn = input.previousElementSibling.querySelector(".btn-upload");
+  btn.textContent = "SE INCARCA...";
+  btn.classList.add("loading-img");
+  var fd = new FormData();
+  fd.append("image", file);
+  fetch("https://api.imgbb.com/1/upload?key="+IMGBB_KEY, {
+    method: "POST",
+    body: fd
+  }).then(function(r){ return r.json(); }).then(function(data){
+    if(data.success){
+      var url = data.data.url;
+      document.getElementById("f-img"+n).value = url;
+      var prev = document.getElementById("prev"+n);
+      prev.src = url;
+      prev.style.display = "block";
+      btn.textContent = "✓ INCARCAT";
+      btn.style.background = "#0a2a0a";
+      setTimeout(function(){
+        btn.textContent = "INLOCUIESTE";
+        btn.classList.remove("loading-img");
+      }, 2000);
+    } else {
+      btn.textContent = "EROARE";
+      btn.classList.remove("loading-img");
+      setTimeout(function(){ btn.textContent = "INCEARCA DIN NOU"; }, 2000);
+    }
+    input.value = "";
+  }).catch(function(){
+    btn.textContent = "EROARE RETEA";
+    btn.classList.remove("loading-img");
+    input.value = "";
+  });
+}
+
+// Populate image previews when editing
+var _origStartEdit = startEdit;
+startEdit = function(c){
+  _origStartEdit(c);
+  for(var i=1;i<=25;i++){
+    var val = c["img"+i];
+    var prev = document.getElementById("prev"+i);
+    var btn = document.querySelector("#file"+i).previousElementSibling.querySelector(".btn-upload");
+    if(val && prev){
+      prev.src = val;
+      prev.style.display = "block";
+      if(btn) { btn.textContent = "INLOCUIESTE"; }
+    } else {
+      if(prev) prev.style.display = "none";
+      if(btn) { btn.textContent = "INCARCA"; }
+    }
+  }
+};
+</script>
+</body>
+</html>

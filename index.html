@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TAF AUTO — tafauto.ro</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#FAFAF8;color:#0D0B08;font-family:"Inter",sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+:root{--gold:#9A7A3A;--gold-l:#B8965A;--cream:#FAFAF8;--dark:#0D0B08;--mid:#2E2620;--soft:#776B58;--bg2:#F4F2EE;--bg3:#EDEAE4;--border:#DDD9D2;--r:6px;--card:#FFFFFF}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--gold)}
+.page{display:none}.page.active{display:block}
+nav{position:fixed;top:0;left:0;right:0;z-index:300;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-weight:600;letter-spacing:5px;color:var(--dark);cursor:pointer;text-transform:uppercase;text-decoration:none}
+.logo em{color:var(--gold);font-style:normal}
+.nav-r{display:flex;align-items:center;gap:2rem}
+.nav-r a{color:var(--soft);font-size:0.68rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:color .2s}
+.nav-r a:hover{color:var(--dark)}
+.nav-wa{color:var(--gold)!important;border:1px solid rgba(154,122,58,0.35);padding:6px 16px;border-radius:var(--r);white-space:nowrap}
+.nav-wa:hover{background:var(--gold)!important;color:#fff!important}
+#hero{padding:calc(58px + 4rem) 5vw 4rem;background:linear-gradient(160deg,#FDFCFA 0%,#F4F2EE 100%);border-bottom:1px solid var(--border)}
+.hero-label{font-size:0.7rem;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1.6rem;display:flex;align-items:center;gap:10px}
+.hero-label::before{content:"";display:block;width:20px;height:1px;background:var(--gold);flex-shrink:0}
+.hero-h1{font-family:"Cormorant Garamond",serif;font-size:clamp(3.1rem,8vw,6.6rem);font-weight:600;line-height:1.05;color:var(--dark);margin-bottom:1.5rem}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-tagline{font-size:0.82rem;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--mid);margin-bottom:2.5rem;display:flex;flex-direction:column;gap:0.45rem}
+.hero-btns{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.hero-tva-note{font-size:0.65rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-top:1rem}
+.btn-prim{background:var(--gold);color:#fff;padding:12px 28px;border-radius:var(--r);font-size:0.7rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn-prim:hover{background:var(--gold-l)}
+.btn-sec{color:var(--soft);font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;border:none;background:none;cursor:pointer;transition:color .2s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-sec:hover{color:var(--dark)}
+.hero-stats{display:flex;gap:3rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.hstat-val{font-family:"Cormorant Garamond",serif;font-size:2.25rem;font-weight:600;color:var(--dark);line-height:1}
+.hstat-val em{color:var(--gold);font-style:normal;font-size:1.1rem}
+.hstat-key{font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-top:3px}
+.sec{padding:5rem 5vw}
+.sec-label{font-size:0.68rem;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold);margin-bottom:0.95rem;display:flex;align-items:center;gap:10px}
+.sec-label::before{content:"";width:16px;height:1px;background:var(--gold);flex-shrink:0}
+.sec-h{font-family:"Cormorant Garamond",serif;font-size:clamp(2.1rem,3.8vw,3.3rem);font-weight:600;color:var(--dark);line-height:1.1}
+.sec-h em{font-style:italic;color:var(--gold)}
+#finantare{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.fin-partners{margin-top:2rem;border-top:1px solid var(--border)}
+.fin-partner{display:flex;align-items:center;gap:1.25rem;padding:1.1rem 0;border-bottom:1px solid var(--border);text-decoration:none;transition:opacity .2s}
+.fin-partner:hover{opacity:0.65}
+.fp-logo{width:44px;height:44px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;letter-spacing:1px;flex-shrink:0}
+.fp-tbi{background:#0D1240;color:#8899DD}.fp-hc{background:#1A3A1A;color:#5BAD5B}
+.fp-name{font-family:"Cormorant Garamond",serif;font-size:1rem;color:var(--dark);display:block;margin-bottom:1px}
+.fp-desc{font-size:0.62rem;color:var(--soft)}.fp-arr{margin-left:auto;color:var(--soft)}
+.fin-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:2rem}
+.fstat{background:var(--bg2);padding:1.35rem 1.25rem}
+.fstat-val{font-family:"Cormorant Garamond",serif;font-size:2.15rem;font-weight:600;color:var(--dark);line-height:1;margin-bottom:3px}
+.fstat-val em{color:var(--gold);font-style:normal;font-size:1rem}
+.fstat-key{font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--soft)}
+#masini{background:var(--cream)}
+.cars-bar{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+.cars-badge{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--soft);padding:5px 12px;border:1px solid var(--border);border-radius:2px;background:var(--card)}
+.cars-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.no-cars,.loading-cars{grid-column:1/-1;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:4rem 2rem;text-align:center;font-family:"Cormorant Garamond",serif;font-size:1.1rem;color:var(--soft)}
+.car-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:box-shadow .25s,transform .25s}
+.car-card.is-sold{cursor:default}
+.car-card.is-sold:hover{box-shadow:none;transform:none}
+.car-card.is-sold .cimg img{filter:grayscale(1) brightness(0.75);transition:none}
+.car-card.is-sold:hover .cimg img{transform:none}
+.car-card.is-sold .cbody{opacity:0.55}
+.sold-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:5}
+.sold-overlay span{font-family:"Cormorant Garamond",serif;font-size:2.4rem;font-weight:700;letter-spacing:6px;color:#E53E3E;text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,0.5),0 0 30px rgba(0,0,0,0.3);transform:rotate(-8deg);border:3px solid #E53E3E;padding:4px 20px;background:rgba(0,0,0,0.15)}
+.car-card:hover{box-shadow:0 8px 32px rgba(22,20,15,0.12);transform:translateY(-3px)}
+.car-card:hover .cimg img{transform:scale(1.04)}
+.cimg{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--bg3)}
+.cimg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s ease}
+.cimg-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(26,23,20,0.55) 100%)}
+.c-status{position:absolute;top:12px;left:12px;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:#fff;border:1px solid rgba(255,255,255,0.4);padding:3px 10px;border-radius:1px;background:rgba(26,23,20,0.45);backdrop-filter:blur(6px)}
+.c-status.sold{font-size:0.72rem;font-weight:700;letter-spacing:2.5px;padding:7px 16px;color:#fff;background:#8A8480;border:1px solid #C0392B;box-shadow:0 0 0 2px rgba(192,57,43,0.5)}
+.c-price-wrap{position:absolute;bottom:12px;left:12px;right:12px}
+.c-price{font-family:"Cormorant Garamond",serif;font-size:2.05rem;font-weight:700;color:#fff;line-height:1}
+.c-rate{font-size:0.58rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.75);margin-top:2px}
+.c-tva{font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;color:#5BAD78;margin-top:2px;display:flex;align-items:center;gap:4px}
+.d-tva{display:inline-flex;align-items:center;gap:5px;font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;color:#3D8B5F;background:rgba(91,173,120,0.1);border:1px solid rgba(91,173,120,0.3);padding:4px 10px;border-radius:4px;margin-top:0.5rem}
+.cbody{padding:1.25rem}
+.c-make{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.c-name{font-family:"Cormorant Garamond",serif;font-size:1.55rem;font-weight:600;color:var(--dark);line-height:1.1;margin-bottom:1rem}
+.c-specs{display:flex;gap:1.25rem;padding:0.8rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:0.9rem;flex-wrap:wrap}
+.cs-v{font-size:0.8rem;color:var(--dark);font-weight:700}
+.cs-k{font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft)}
+.c-card-actions{display:flex;gap:0.5rem}
+.c-btn-call{flex:1;background:transparent;border:1px solid var(--border);color:var(--dark);padding:8px;border-radius:var(--r);font-size:0.65rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s}
+.c-btn-call:hover{border-color:var(--gold);color:var(--gold)}
+.c-btn-wa{flex:1.2;background:#25D366;color:#fff;border:none;padding:8px;border-radius:var(--r);font-size:0.65rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.c-btn-wa:hover{background:#1ebe5c}
+.c-btn-share{flex:0 0 auto;background:transparent;border:1px solid var(--border);color:var(--dark);width:34px;padding:8px;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.c-btn-share:hover{border-color:var(--gold);color:var(--gold)}
+.c-btn-share svg{width:14px;height:14px}
+.btn-share-detail{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:var(--dark);padding:11px;border-radius:var(--r);font-size:0.68rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--border);cursor:pointer;transition:all .2s;margin-top:0.6rem}
+.btn-share-detail:hover{border-color:var(--gold);color:var(--gold)}
+.btn-share-detail svg{width:14px;height:14px}
+#page-detail{padding-top:58px;background:var(--cream);min-height:100vh}
+.d-topbar{display:flex;align-items:center;gap:8px;padding:0.9rem 5vw;border-bottom:1px solid var(--border);background:var(--card)}
+.d-back{font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--soft);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:7px;transition:color .2s}
+.d-back:hover{color:var(--gold)}
+.d-sep{color:var(--border)}.d-bc{font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--dark)}
+.d-wrap{display:grid;grid-template-columns:1fr 340px;min-height:calc(100vh - 96px);background:var(--card)}
+.d-left{border-right:1px solid var(--border);min-width:0}
+.gal-main{position:relative;background:#fff;overflow:hidden;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;max-height:600px}
+.gal-main img{width:100%;height:auto;max-height:600px;object-fit:contain;display:block;user-select:none;-webkit-user-select:none}
+.gal-counter{position:absolute;bottom:12px;right:12px;background:rgba(26,23,20,0.55);color:#fff;font-size:0.65rem;letter-spacing:1px;padding:4px 10px;border-radius:3px;backdrop-filter:blur(4px);pointer-events:none;display:none}
+.gal-thumbs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;background:var(--card);max-width:100%}
+.gthumb{width:88px;height:58px;flex-shrink:0;cursor:pointer;overflow:hidden;opacity:0.4;border-right:1px solid var(--border);transition:opacity .2s;position:relative}
+.gthumb.active{opacity:1}.gthumb.active::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold)}
+.gthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.d-info{padding:2rem}
+.d-make{font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.d-model{font-family:"Cormorant Garamond",serif;font-size:clamp(2.15rem,3.7vw,3rem);font-weight:600;color:var(--dark);line-height:1.05;margin-bottom:0.4rem}
+.d-price-row{display:flex;align-items:baseline;gap:1rem;padding:1.25rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:1.25rem 0}
+.d-price{font-family:"Cormorant Garamond",serif;font-size:2.4rem;font-weight:700;color:var(--gold);line-height:1}
+.d-price-lbl{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--soft)}
+.d-rate-note{font-size:0.68rem;color:var(--soft);font-weight:300;margin-top:0.35rem}
+.specs-g{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin:1.5rem 0}
+.sg-i{background:var(--bg2);padding:0.9rem 1rem}
+.sg-k{font-size:0.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:3px}
+.sg-v{font-size:0.96rem;color:var(--dark);font-weight:700}
+.d-desc-h{font-family:"Cormorant Garamond",serif;font-size:1rem;color:var(--dark);margin-bottom:0.5rem;font-style:italic}
+.d-desc-t{font-size:0.95rem;color:var(--mid);line-height:1.85;font-weight:500;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;max-width:100%}
+.d-trust{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);background:var(--card)}
+.dti{padding:1rem;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:3px}
+.dti:last-child{border-right:none}
+.dti-icon{font-size:0.95rem;margin-bottom:2px}.dti-lbl{font-size:0.65rem;font-weight:500;color:var(--dark)}.dti-sub{font-size:0.56rem;color:var(--soft)}
+.d-right{position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;display:flex;flex-direction:column;background:var(--card)}
+.drp{padding:1.5rem;border-bottom:1px solid var(--border)}
+.drp-lbl{font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--soft);margin-bottom:0.9rem}
+.drp-phone{font-family:"Cormorant Garamond",serif;font-size:1.5rem;font-weight:600;color:var(--dark);margin-bottom:1rem}
+.btn-ring{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--gold);color:#fff;padding:12px;border-radius:var(--r);font-size:0.68rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:background .2s;margin-bottom:0.6rem}
+.btn-ring:hover{background:var(--gold-l)}
+.btn-wap{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:#25D366;padding:11px;border-radius:var(--r);font-size:0.68rem;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;border:1px solid rgba(37,211,102,0.3);cursor:pointer;transition:all .2s}
+.btn-wap:hover{border-color:#25D366;background:rgba(37,211,102,0.05)}
+.drp-gar{display:flex;align-items:flex-start;gap:9px;background:rgba(168,91,62,0.07);border:1px solid rgba(168,91,62,0.22);border-radius:var(--r);padding:0.9rem 1rem;margin-top:1rem}
+.drp-gar strong{font-size:0.7rem;font-weight:500;color:var(--gold);display:block;margin-bottom:1px}
+.drp-gar span{font-size:0.6rem;color:var(--soft)}
+.drp-fin-item{display:flex;align-items:center;gap:1rem;padding:0.9rem 0;border-bottom:1px solid var(--border);text-decoration:none;transition:opacity .2s}
+.drp-fin-item:first-of-type{border-top:1px solid var(--border)}.drp-fin-item:hover{opacity:0.6}
+.dfi-logo{width:36px;height:36px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;flex-shrink:0}
+.dfi-tbi{background:#0D1240;color:#8899DD}.dfi-hc{background:#1A3A1A;color:#5BAD5B}
+.dfi-info strong{display:block;font-size:0.72rem;color:var(--dark);margin-bottom:1px;font-weight:500}
+.dfi-info span{font-size:0.6rem;color:var(--soft)}.dfi-arr{margin-left:auto;color:var(--soft)}
+#contact{background:#fff;border-top:1px solid var(--border)}
+.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.ct-list{display:flex;flex-direction:column}
+.ct-row{display:flex;align-items:flex-start;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--border)}
+.ct-row:first-child{border-top:1px solid var(--border)}
+.ct-ico{width:32px;height:32px;border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;color:var(--gold);background:var(--bg2)}
+.ct-body strong{display:block;font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:3px}
+.ct-body a,.ct-body span{font-family:"Cormorant Garamond",serif;font-size:1rem;font-weight:300;color:var(--dark);text-decoration:none;transition:color .2s}
+.ct-body a:hover{color:var(--gold)}
+.wa-big{display:inline-flex;align-items:center;gap:9px;margin-top:1.5rem;background:#25D366;color:#fff;padding:11px 22px;border-radius:var(--r);font-size:0.68rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:background .2s}
+.wa-big:hover{background:#1ebe5c}
+.ct-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.ct-card-head{padding:1.5rem 1.75rem;border-bottom:1px solid var(--border);background:var(--card)}
+.ct-card-title{font-family:"Cormorant Garamond",serif;font-size:1.2rem;color:var(--dark);letter-spacing:1px;margin-bottom:2px}
+.ct-card-sub{font-size:0.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--soft)}
+.ct-card-body{padding:1.5rem 1.75rem}
+.ct-pts{list-style:none;display:flex;flex-direction:column;gap:0.65rem;margin-bottom:1.5rem}
+.ct-pts li{display:flex;align-items:center;gap:9px;font-size:0.75rem;color:var(--mid);font-weight:300}
+.ct-dot{width:3px;height:3px;border-radius:50%;background:var(--gold);flex-shrink:0}
+footer{background:var(--bg3);border-top:1px solid var(--border);padding:1.75rem 5vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem}
+.f-logo{font-family:"Cormorant Garamond",serif;font-size:0.95rem;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:var(--dark)}
+.f-logo em{color:var(--gold);font-style:normal}
+.f-copy{font-size:0.6rem;letter-spacing:1px;color:var(--soft)}
+.f-note{font-size:0.56rem;color:var(--soft);width:100%;padding-top:0.75rem;border-top:1px solid var(--border);font-weight:300;line-height:1.6}
+@media(max-width:960px){.d-wrap{grid-template-columns:1fr}.d-right{position:static;height:auto;border-top:1px solid var(--border)}.d-trust{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.nav-r a:not(.nav-wa){display:none}.fin-grid{grid-template-columns:1fr;gap:2.5rem}.cars-grid{grid-template-columns:1fr}.ct-grid{grid-template-columns:1fr;gap:2.5rem}.d-trust{grid-template-columns:1fr 1fr}.d-info{padding:1.25rem}}
+.wa-ico{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" onclick="showList();return false" href="#">TAF <em>AUTO</em></a>
+  <div class="nav-r">
+    <a href="#" onclick="showList();return false">Stoc</a>
+    <a href="#finantare">Finanțare</a>
+    <a href="#contact">Contact</a>
+    <a href="https://wa.me/40748110000" target="_blank" class="nav-wa">WhatsApp</a>
+  </div>
+</nav>
+
+<div id="page-list" class="page active">
+<section id="hero">
+  <div class="hero-label">Vehicule selectate · România</div>
+  <h1 class="hero-h1">Mașina ta <em>te așteaptă.</em></h1>
+  <div class="hero-tagline">
+    <span>Garanție 12 luni fără limită km</span>
+    <span>Rate cu buletinul, fără avans</span>
+    <span>Istoric complet verificat</span>
+  </div>
+  <div class="hero-btns">
+    <a href="#masini" class="btn-prim">Explorează stocul</a>
+    <a href="#contact" class="btn-sec">Contactează-ne →</a>
+  </div>
+  <div class="hero-tva-note">Vehiculele conțin TVA deductibil</div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-val" id="h-avail">0<em>+</em></div><div class="hstat-key">Disponibile</div></div>
+    <div class="hstat"><div class="hstat-val">12<em>luni</em></div><div class="hstat-key">Garanție</div></div>
+    <div class="hstat"><div class="hstat-val">0<em>%</em></div><div class="hstat-key">Avans</div></div>
+  </div>
+</section>
+
+<section id="finantare" class="sec">
+  <div class="fin-grid">
+    <div>
+      <div class="sec-label">Parteneri financiari</div>
+      <h2 class="sec-h">Rate cu buletinul,<br><em>fără avans.</em></h2>
+      <div class="fin-partners">
+        <a href="#contact" class="fin-partner"><div class="fp-logo fp-tbi">TBI</div><div><span class="fp-name">TBI Bank</span><span class="fp-desc">Rate fixe · Transparent</span></div><div class="fp-arr">→</div></a>
+        <a href="#contact" class="fin-partner"><div class="fp-logo fp-hc">HC</div><div><span class="fp-name">Happy Credit</span><span class="fp-desc">Aprobare rapidă · Flexibil</span></div><div class="fp-arr">→</div></a>
+      </div>
+    </div>
+    <div>
+      <div class="sec-label">Condiții</div>
+      <h2 class="sec-h" style="margin-bottom:2rem">Garanție 12 luni,<br><em>fără limită de km.</em></h2>
+      <div class="fin-stats">
+        <div class="fstat"><div class="fstat-val">0<em>%</em></div><div class="fstat-key">Avans</div></div>
+        <div class="fstat"><div class="fstat-val">60<em>luni</em></div><div class="fstat-key">Maxim</div></div>
+        <div class="fstat"><div class="fstat-val"><em>Aceeași zi</em></div><div class="fstat-key">Aprobare</div></div>
+        <div class="fstat"><div class="fstat-val"><em>Gratuit</em></div><div class="fstat-key">Consultanță</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="masini" class="sec">
+  <div class="cars-bar">
+    <div><div class="sec-label">Stoc curent</div><h2 class="sec-h">Mașini disponibile</h2></div>
+    <div class="cars-badge" id="cars-badge">— mașini</div>
+  </div>
+  <div class="cars-grid" id="cars-grid"><div class="loading-cars">Se încarcă stocul...</div></div>
+</section>
+
+<section id="contact" class="sec">
+  <div class="sec-label">Ia legătura</div>
+  <h2 class="sec-h" style="margin-bottom:2.5rem">Contact</h2>
+  <div class="ct-grid">
+    <div>
+      <div class="ct-list">
+        <div class="ct-row"><div class="ct-ico">✆</div><div class="ct-body"><strong>Telefon &amp; WhatsApp</strong><a href="tel:+40748110000">0748 110 000</a></div></div>
+        <div class="ct-row"><div class="ct-ico">✉</div><div class="ct-body"><strong>Email</strong><a href="mailto:Taf.nord@yahoo.com">Taf.nord@yahoo.com</a></div></div>
+        
+        <div class="ct-row"><div class="ct-ico">♪</div><div class="ct-body"><strong>TikTok</strong><a href="https://tiktok.com/@tafauto.ro" target="_blank">@tafauto.ro</a></div></div>
+        <div class="ct-row"><div class="ct-ico">⊙</div><div class="ct-body"><strong>Locație</strong><a href="https://maps.google.com/?q=Strada+Mihai+Eminescu+75,+077180+Tunari,+Romania" target="_blank">Strada Mihai Eminescu 75, Tunari, Ilfov</a></div></div>
+        
+      </div>
+      <a href="https://wa.me/40748110000" class="wa-big" target="_blank">
+        <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Scrie pe WhatsApp
+      </a>
+    </div>
+    <div class="ct-card">
+      <div class="ct-card-head"><div class="ct-card-title">TBI Bank &amp; Happy Credit</div><div class="ct-card-sub">Finanțare IFN · România</div></div>
+      <div class="ct-card-body">
+        <ul class="ct-pts">
+          <li><div class="ct-dot"></div>Rate cu buletinul, fără avans</li>
+          <li><div class="ct-dot"></div>Garanție 12 luni, fără limită de km</li>
+          <li><div class="ct-dot"></div>Mașini cu istoric complet verificat</li>
+          <li><div class="ct-dot"></div>Aprobare rapidă, documentație minimă</li>
+          <li><div class="ct-dot"></div>Consultanță gratuită din partea noastră</li>
+        </ul>
+        <a href="tel:+40748110000" class="btn-prim" style="width:100%;justify-content:center">Sună acum →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">TAF <em>AUTO</em></div>
+  <div class="f-copy">© <span id="yr"></span> TAF Auto · tafauto.ro</div>
+  <div class="f-note">* Garanția auto 12 luni fără limită de km se aplică conform termenelor și condițiilor comunicate la momentul achiziției.</div>
+</footer>
+</div>
+
+<div id="page-detail" class="page">
+  <div class="d-topbar">
+    <button class="d-back" onclick="showList()">← Înapoi</button>
+    <span class="d-sep">/</span><span class="d-bc" id="d-bc"></span>
+  </div>
+  <div class="d-wrap">
+    <div class="d-left">
+      <div class="gal-main"><img id="d-main-img" src="" alt=""/><div class="gal-counter" id="gal-counter"></div></div>
+      <div class="gal-thumbs" id="d-thumbs"></div>
+      <div class="d-info">
+        <div class="d-make" id="d-make"></div>
+        <div class="d-model" id="d-model"></div>
+        <div class="d-price-row">
+          <div><div class="d-price" id="d-price"></div><div class="d-rate-note">Disponibil și în rate prin TBI Bank sau Happy Credit</div><div id="d-tva-badge" style="display:none" class="d-tva">✓ TVA deductibil</div></div>
+          <div class="d-price-lbl">Preț vânzare</div>
+        </div>
+        <div class="specs-g" id="d-specs"></div>
+        <div id="d-desc-wrap" style="display:none;margin-bottom:1.5rem">
+          <div class="d-desc-h">Despre această mașină</div>
+          <div class="d-desc-t" id="d-desc-t"></div>
+        </div>
+      </div>
+      <div class="d-trust">
+        <div class="dti"><div class="dti-icon">🛡</div><div class="dti-lbl">Garanție 12 luni*</div><div class="dti-sub">Fără limită km</div></div>
+        <div class="dti"><div class="dti-icon">✅</div><div class="dti-lbl">Verificată tehnic</div><div class="dti-sub">Fără surprize</div></div>
+        <div class="dti"><div class="dti-icon">📋</div><div class="dti-lbl">Istoric complet</div><div class="dti-sub">Transparent</div></div>
+        <div class="dti"><div class="dti-icon">📞</div><div class="dti-lbl">Răspuns rapid</div><div class="dti-sub">WhatsApp & telefon</div></div>
+      </div>
+    </div>
+    <div class="d-right">
+      <div class="drp">
+        <div class="drp-lbl">Contact direct</div>
+        <div class="drp-phone">0748 110 000</div>
+        <a href="tel:+40748110000" class="btn-ring">✆ Sună acum</a>
+        <a id="d-wa" href="#" target="_blank" class="btn-wap">
+          <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+        <button type="button" class="btn-share-detail" id="d-share">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Distribuie anunțul
+        </button>
+        <div class="drp-gar"><div style="font-size:1rem;flex-shrink:0">🛡</div><div><strong>Garanție 12 luni*</strong><span>Fără limită de km · Detalii la contact</span></div></div>
+      </div>
+      <div class="drp">
+        <div class="drp-lbl">Finanțare disponibilă</div>
+        <a href="tel:+40748110000" class="drp-fin-item"><div class="dfi-logo dfi-tbi">TBI</div><div class="dfi-info"><strong>TBI Bank</strong><span>Rate fixe, transparente</span></div><div class="dfi-arr">→</div></a>
+        <a href="tel:+40748110000" class="drp-fin-item"><div class="dfi-logo dfi-hc">HC</div><div class="dfi-info"><strong>Happy Credit</strong><span>Aprobare rapidă, flexibil</span></div><div class="dfi-arr">→</div></a>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="f-logo">TAF <em>AUTO</em></div>
+    <div class="f-copy">© <span class="yr2"></span> TAF Auto · tafauto.ro</div>
+    <div class="f-note">* Garanția auto 12 luni fără limită de km se aplică conform termenelor și condițiilor comunicate la momentul achiziției.</div>
+  </footer>
+</div>
+
+<script>
+var SB = "https://gpcnnrzimzomrixzrnqy.supabase.co";
+var SK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwY25ucnppbXpvbXJpeHpybnF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2OTE2NjUsImV4cCI6MjA5NzI2NzY2NX0.2aLmKZkiW-iF52zHFMyj5aEfKZO9rwKRQmwInbhv_4A";
+var PH = "40748110000";
+var FB = "https://placehold.co/800x500/EDEAE4/9A7A3A?text=TAF+AUTO";
+
+document.getElementById("yr").textContent = new Date().getFullYear();
+document.querySelectorAll(".yr2").forEach(function(e){e.textContent=new Date().getFullYear();});
+
+function waLink(c){
+  return "https://wa.me/"+PH+"?text="+encodeURIComponent("Bună ziua, sunt interesat de "+(c.make||"")+" "+(c.model||"")+" ("+(c.year||"")+") la "+(c.price||"")+". Mai este disponibil?");
+}
+
+function carUrl(c){
+  return location.origin+"/masina/"+c.id;
+}
+
+function shareCar(c){
+  var url=carUrl(c);
+  var title=(c.make||"")+" "+(c.model||"")+" "+(c.year||"")+" — TAF AUTO";
+  var text="Uite ce mașină am găsit: "+(c.make||"")+" "+(c.model||"")+" ("+(c.year||"")+") la "+(c.price||"")+".";
+  if(navigator.share){
+    navigator.share({title:title,text:text,url:url}).catch(function(){});
+  }else{
+    navigator.clipboard.writeText(url).then(function(){
+      alert("Link copiat: "+url);
+    }).catch(function(){
+      prompt("Copiază linkul mașinii:",url);
+    });
+  }
+}
+
+function getImgs(c){
+  var imgs=[];
+  if(c.img1) imgs.push(c.img1);
+  if(c.img2) imgs.push(c.img2);
+  if(c.img3) imgs.push(c.img3);
+  if(c.img4) imgs.push(c.img4);
+  if(c.img5) imgs.push(c.img5);
+  if(c.img6) imgs.push(c.img6);
+  if(c.img7) imgs.push(c.img7);
+  if(c.img8) imgs.push(c.img8);
+  if(c.img9) imgs.push(c.img9);
+  if(c.img10) imgs.push(c.img10);
+  if(c.img11) imgs.push(c.img11);
+  if(c.img12) imgs.push(c.img12);
+  if(c.img13) imgs.push(c.img13);
+  if(c.img14) imgs.push(c.img14);
+  if(c.img15) imgs.push(c.img15);
+  if(c.img16) imgs.push(c.img16);
+  if(c.img17) imgs.push(c.img17);
+  if(c.img18) imgs.push(c.img18);
+  if(c.img19) imgs.push(c.img19);
+  if(c.img20) imgs.push(c.img20);
+  if(c.img21) imgs.push(c.img21);
+  if(c.img22) imgs.push(c.img22);
+  if(c.img23) imgs.push(c.img23);
+  if(c.img24) imgs.push(c.img24);
+  if(c.img25) imgs.push(c.img25);
+  return imgs;
+}
+
+function loadCars(){
+  fetch(SB+"/rest/v1/masini?select=*&order=created_at.desc",{
+    headers:{"apikey":SK,"Authorization":"Bearer "+SK}
+  }).then(function(r){
+    if(!r.ok) throw new Error(r.status);
+    return r.json();
+  }).then(function(data){
+    renderCars(data);
+    checkDeepLink(data);
+  }).catch(function(e){
+    document.getElementById("cars-grid").innerHTML='<div class="no-cars">Eroare la încărcare. Contactați-ne direct.</div>';
+    console.error(e);
+  });
+}
+
+function checkDeepLink(cars){
+  var params=new URLSearchParams(location.search);
+  var carId=params.get("masina");
+  if(!carId) return;
+  var found=cars.find(function(c){return String(c.id)===String(carId);});
+  if(found) showDetail(found);
+}
+
+function renderCars(cars){
+  var g=document.getElementById("cars-grid");
+  var b=document.getElementById("cars-badge");
+  var h=document.getElementById("h-avail");
+  g.innerHTML="";
+  if(!cars||!cars.length){
+    g.innerHTML='<div class="no-cars">Stoc momentan gol — revino curând.</div>';
+    b.textContent="0 mașini"; return;
+  }
+  var n=cars.filter(function(c){return c.status==="Disponibil";}).length;
+  b.textContent=cars.length+(cars.length===1?" mașină":" mașini");
+  if(h) h.innerHTML=n+'<em>+</em>';
+  cars.forEach(function(c){
+    var imgs=getImgs(c);
+    var img=imgs[0]||FB;
+    var sold=c.status==="Vândut";
+    var card=document.createElement("div"); card.className="car-card"+(sold?" is-sold":"");
+    var cimg=document.createElement("div"); cimg.className="cimg";
+    var im=document.createElement("img"); im.src=img; im.alt=(c.make||"")+" "+(c.model||""); im.loading="lazy";
+    im.onerror=function(){this.src=FB;};
+    var ov=document.createElement("div"); ov.className="cimg-ov";
+    var st=document.createElement("div"); st.className="c-status"+(sold?" sold":""); st.textContent=c.status||"Disponibil";
+    var pw=document.createElement("div"); pw.className="c-price-wrap";
+    pw.innerHTML='<div class="c-price">'+(c.price||"")+'</div><div class="c-rate">Sau în rate IFN</div>'+(c.tva_deductibil?'<div class="c-tva">✓ TVA deductibil</div>':'');
+    cimg.appendChild(im); cimg.appendChild(ov);
+    if(!sold){ cimg.appendChild(st); }
+    cimg.appendChild(pw);
+    if(sold){
+      var soldOv=document.createElement("div"); soldOv.className="sold-overlay";
+      soldOv.innerHTML='<span>Vândut</span>';
+      cimg.appendChild(soldOv);
+    }
+    var cb=document.createElement("div"); cb.className="cbody";
+    var mk=document.createElement("div"); mk.className="c-make"; mk.textContent=c.make||"";
+    var nm=document.createElement("div"); nm.className="c-name"; nm.textContent=(c.model||"")+" · "+(c.year||"");
+    var sp=document.createElement("div"); sp.className="c-specs";
+    if(c.km){var s1=document.createElement("div");s1.innerHTML='<div class="cs-v">'+c.km+'</div><div class="cs-k">Km</div>';sp.appendChild(s1);}
+    if(c.engine){var s2=document.createElement("div");s2.innerHTML='<div class="cs-v">'+c.engine+'</div><div class="cs-k">Motor</div>';sp.appendChild(s2);}
+    if(c.power){var s3=document.createElement("div");s3.innerHTML='<div class="cs-v">'+c.power+'</div><div class="cs-k">Putere</div>';sp.appendChild(s3);}
+    if(!sold){
+    var ca=document.createElement("div"); ca.className="c-card-actions";
+    var cs=document.createElement("a"); cs.className="c-btn-call"; cs.href="tel:+"+PH; cs.textContent="✆ Sună";
+    cs.addEventListener("click",function(e){e.stopPropagation();});
+    var cw=document.createElement("a"); cw.className="c-btn-wa"; cw.target="_blank"; cw.href=waLink(c); cw.textContent="WhatsApp";
+    cw.addEventListener("click",function(e){e.stopPropagation();});
+    var csh=document.createElement("button"); csh.className="c-btn-share"; csh.type="button";
+    csh.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+    csh.addEventListener("click",function(e){e.stopPropagation();shareCar(c);});
+    ca.appendChild(cs); ca.appendChild(cw); ca.appendChild(csh);
+    cb.appendChild(mk); cb.appendChild(nm); cb.appendChild(sp); cb.appendChild(ca);
+    card.appendChild(cimg); card.appendChild(cb);
+    card.addEventListener("click",function(){showDetail(c);});
+    } else {
+    cb.appendChild(mk); cb.appendChild(nm); cb.appendChild(sp);
+    card.appendChild(cimg); card.appendChild(cb);
+    }
+    g.appendChild(card);
+  });
+}
+
+function showDetail(c){
+  var imgs=getImgs(c);
+  var curIdx=0;
+  var newUrl=location.pathname+"?masina="+c.id;
+  if(location.pathname+location.search!==newUrl){
+    history.replaceState(null,"",newUrl);
+  }
+  document.getElementById("d-bc").textContent=(c.make||"")+" "+(c.model||"")+" "+(c.year||"");
+  var mi=document.getElementById("d-main-img");
+  mi.src=imgs[0]||FB; mi.alt=(c.make||"")+" "+(c.model||"");
+  var th=document.getElementById("d-thumbs"); th.innerHTML="";
+
+  var gc=document.getElementById("gal-counter");
+  function goToImg(idx){
+    if(!imgs.length) return;
+    curIdx=(idx+imgs.length)%imgs.length;
+    mi.src=imgs[curIdx]||FB;
+    th.querySelectorAll(".gthumb").forEach(function(x,i){x.classList.toggle("active",i===curIdx);});
+    var activeThumb=th.querySelectorAll(".gthumb")[curIdx];
+    if(activeThumb) activeThumb.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
+    if(gc) gc.textContent=(curIdx+1)+" / "+imgs.length;
+  }
+  if(gc) gc.style.display=imgs.length>1?"block":"none";
+  if(gc && imgs.length>1) gc.textContent="1 / "+imgs.length;
+
+  imgs.forEach(function(src,i){
+    var t=document.createElement("div"); t.className="gthumb"+(i===0?" active":"");
+    var ti=document.createElement("img"); ti.src=src; ti.loading="lazy"; ti.onerror=function(){this.src=FB;};
+    t.appendChild(ti);
+    t.addEventListener("click",function(){goToImg(i);});
+    th.appendChild(t);
+  });
+
+  // Swipe support on main image
+  var gm=document.querySelector(".gal-main");
+  var touchStartX=0, touchEndX=0;
+  gm.ontouchstart=function(e){touchStartX=e.changedTouches[0].screenX;};
+  gm.ontouchend=function(e){
+    touchEndX=e.changedTouches[0].screenX;
+    var diff=touchStartX-touchEndX;
+    if(Math.abs(diff)>40){
+      if(diff>0) goToImg(curIdx+1); else goToImg(curIdx-1);
+    }
+  };
+  // Click left/right half on desktop to navigate
+  gm.onclick=function(e){
+    if(imgs.length<2) return;
+    var rect=gm.getBoundingClientRect();
+    var clickX=e.clientX-rect.left;
+    if(clickX<rect.width/2) goToImg(curIdx-1); else goToImg(curIdx+1);
+  };
+  gm.style.cursor=imgs.length>1?"pointer":"default";
+
+  document.getElementById("d-make").textContent=c.make||"";
+  document.getElementById("d-model").textContent=(c.model||"")+" "+(c.year||"");
+  document.getElementById("d-price").textContent=c.price||"";
+  document.getElementById("d-tva-badge").style.display=c.tva_deductibil?"inline-flex":"none";
+  var rows=[["Fabricație",c.year],["Kilometraj",c.km],["Motor",c.engine],["Cutie viteze",c.gearbox],["Putere",c.power],["Culoare",c.color],["Garanție",c.warranty?(c.warranty+"*"):"12 luni*"]].filter(function(r){return r[1];});
+  document.getElementById("d-specs").innerHTML=rows.map(function(r){return '<div class="sg-i"><div class="sg-k">'+r[0]+'</div><div class="sg-v">'+r[1]+'</div></div>';}).join("");
+  var dw=document.getElementById("d-desc-wrap");
+  if(c.descr){document.getElementById("d-desc-t").textContent=c.descr;dw.style.display="block";}else{dw.style.display="none";}
+  document.getElementById("d-wa").href=waLink(c);
+  document.getElementById("d-share").onclick=function(){shareCar(c);};
+  document.getElementById("page-list").classList.remove("active");
+  document.getElementById("page-detail").classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function showList(){
+  document.getElementById("page-detail").classList.remove("active");
+  document.getElementById("page-list").classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(location.search.indexOf("masina")!==-1){
+    history.replaceState(null,"",location.pathname);
+  }
+}
+
+loadCars();
+</script>
+</body>
+</html>
